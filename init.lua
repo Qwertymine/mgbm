@@ -5,7 +5,7 @@ local mg_buffers = {}
 local u_buffers = {}
 
 local function get_size(size, dims)
-	local z = 0
+	local z = 1
 	if dims == 3
 	and size.z then
 		z = size.z
