@@ -43,11 +43,15 @@ local function aquire_buffer(size, dims)
 end
 
 local mg_id = ""
-mgbm.get_mg_buffer = function(size, dims, id)
-	if mg_id ~= id then
+mgbm.set_mg_id = function(id)
+	if id and mg_id ~= id then
 		release_old_mg_buffers()
 		mg_id = id
 	end
+end
+
+mgbm.get_mg_buffer = function(size, dims, id)
+	mgbm.set_mg_id(id)
 
 	local buffer = aquire_buffer(size, dims)
 	mg_buffers[buffer] = buffer
