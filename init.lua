@@ -20,7 +20,6 @@ end
 local function release_old_mg_buffers()
 	for buffer, _ in pairs(mg_buffers) do
 		mgbm.return_buffer(buffer)
-		mg_buffers[buffer] = nil
 	end
 end
 
@@ -28,12 +27,12 @@ local function aquire_buffer(size, dims)
 	local mag = get_buffer_mag(size, dims)
 	local fsize = get_size(size, dims)
 
-	if not buffers[mag] then
-		buffers[mag] = {}
+	if not buffer_store[mag] then
+		buffer_store[mag] = {}
 	end
 
-	local buffer = buffers[mag][#buffers[mag]] or {}
-	buffers[mag][#buffers[mag]] = nil
+	local buffer = buffer_store[mag][#buffer_store[mag]] or {}
+	buffer_store[mag][#buffer_store[mag]] = nil
 
 	buffer[fsize+1] = nil
 	buffer.size = size
@@ -89,6 +88,10 @@ mgbm.return_buffer = function(buffer)
 	buffer.size = nil
 	buffer.dims = nil
 
-	buffers[mag][#buffers[mag]+1] = buffer
+	buffer_store[mag][#buffer_store[mag]+1] = buffer
 end
 
+-- This is to ensure that the buffers are collected even if there is only one mapgen
+minetest.register_on_mapgen(function()
+	mgbm.set_mg_id("mgbm_reaper")
+end)
