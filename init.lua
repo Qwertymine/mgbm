@@ -92,6 +92,6 @@ mgbm.return_buffer = function(buffer)
 end
 
 -- This is to ensure that the buffers are collected even if there is only one mapgen
-minetest.register_on_mapgen(function()
+minetest.register_on_generated(function()
 	mgbm.set_mg_id("mgbm_reaper")
 end)
